@@ -13,10 +13,19 @@ export class RegexParser {
   }
 
   normalizar(regex: string): string {
-    const limpia = regex.replace(/\s+/g, "");
+    let limpia = regex.trim().replace(/^['"]+|['"]+$/g, "").replace(/\s+/g, "");
     if (!limpia) {
       throw new Error("RF-02: La expresión regular no puede estar vacía.");
     }
+
+    // Permitir alias de unión +, U, ∪ si no son símbolos del alfabeto
+    if (!this.alfabeto.pertenece("+")) {
+      limpia = limpia.split("+").join("|");
+    }
+    if (!this.alfabeto.pertenece("U")) {
+      limpia = limpia.split("U").join("|");
+    }
+    limpia = limpia.split("∪").join("|");
 
     const operadoresValidos = new Set(["|", "*", "(", ")"]);
 

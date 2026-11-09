@@ -3,6 +3,14 @@ import { EPSILON } from "./types";
 export class Alphabet {
   private _simbolos: Set<string>;
 
+  static parsearCadena(alfaStr: string): string[] {
+    const limpio = alfaStr.trim().replace(/^[{[(\]]+|[}\])]+$/g, "");
+    const partes = limpio.includes(",") ? limpio.split(",") : limpio.split(/\s+/);
+    return partes
+      .map((p) => p.trim().replace(/^['"]+|['"]+$/g, ""))
+      .filter((p) => p.length > 0);
+  }
+
   constructor(simbolos: string[]) {
     if (!simbolos || simbolos.length === 0) {
       throw new Error("RF-01: El alfabeto no puede estar vacío.");

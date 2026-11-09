@@ -38,7 +38,7 @@ export function App() {
   const procesarModalidadA = (alfaStr: string, regexStr: string) => {
     setErrorGlobal(null);
     try {
-      const simbolos = alfaStr.split(",").map((s) => s.trim()).filter((s) => s.length > 0);
+      const simbolos = Alphabet.parsearCadena(alfaStr);
       const alfabeto = new Alphabet(simbolos);
 
       // 1. Thompson (Regex -> ε-AFND)
@@ -75,13 +75,23 @@ export function App() {
   }) => {
     setErrorGlobal(null);
     try {
-      const simbolos = datos.alfabetoStr.split(",").map((s) => s.trim()).filter((s) => s.length > 0);
+      const simbolos = Alphabet.parsearCadena(datos.alfabetoStr);
       const alfabeto = new Alphabet(simbolos);
       const aut = new Automata(alfabeto);
 
-      const estados = datos.estadosStr.split(",").map((s) => s.trim()).filter((s) => s.length > 0);
-      const inicial = datos.inicialStr.trim();
-      const finales = new Set(datos.finalesStr.split(",").map((s) => s.trim()).filter((s) => s.length > 0));
+      const estados = datos.estadosStr
+        .replace(/^[{[(\]]+|[}\])]+$/g, "")
+        .split(",")
+        .map((s) => s.trim().replace(/^['"]+|['"]+$/g, ""))
+        .filter((s) => s.length > 0);
+      const inicial = datos.inicialStr.trim().replace(/^['"]+|['"]+$/g, "");
+      const finales = new Set(
+        datos.finalesStr
+          .replace(/^[{[(\]]+|[}\])]+$/g, "")
+          .split(",")
+          .map((s) => s.trim().replace(/^['"]+|['"]+$/g, ""))
+          .filter((s) => s.length > 0)
+      );
 
       if (!estados.includes(inicial)) {
         throw new Error(`El estado inicial '${inicial}' no está en la lista de estados Q.`);
@@ -92,7 +102,11 @@ export function App() {
       }
 
       for (const t of datos.transiciones) {
-        aut.agregarTransicion(t.origen, t.simbolo, t.destino);
+        aut.agregarTransicion(
+          t.origen.trim().replace(/^['"]+|['"]+$/g, ""),
+          t.simbolo.trim().replace(/^['"]+|['"]+$/g, ""),
+          t.destino.trim().replace(/^['"]+|['"]+$/g, "")
+        );
       }
 
       setAutomataInicial(aut);

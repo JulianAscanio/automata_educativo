@@ -20,15 +20,24 @@ class RegexParser:
         RF-02: Valida que los símbolos pertenezcan al alfabeto
         e inserta explícitamente el operador de concatenación ('.').
         """
+        regex = regex.strip().strip("'\"")
         regex = regex.replace(" ", "")
         if not regex:
             raise RegexSyntaxError("La expresión regular no puede estar vacía.")
 
+        # Permitir operadores habituales de unión (+, U, ∪) como alias de | si no están en Σ
+        if '+' not in self.alfabeto.simbolos:
+            regex = regex.replace('+', '|')
+        if 'U' not in self.alfabeto.simbolos:
+            regex = regex.replace('U', '|')
+        regex = regex.replace('∪', '|')
+
         # Validar símbolos
         for c in regex:
             if c not in self.alfabeto.simbolos and c not in self.OPERADORES:
+                simbolos_disp = sorted(list(self.alfabeto.simbolos))
                 raise RegexSyntaxError(
-                    f"RF-02 Violado: Símbolo '{c}' no pertenece al alfabeto {self.alfabeto} ni es un operador permitido (| * ( ))."
+                    f"RF-02 Violado: Símbolo '{c}' en la expresión regular no pertenece al alfabeto {simbolos_disp} ni es un operador permitido (| * ( ))."
                 )
 
         # Inserción de concatenación explícita

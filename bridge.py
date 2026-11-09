@@ -67,6 +67,24 @@ def automata_a_dict(automata: Automata) -> Dict[str, Any]:
         }
     }
 
+def limpiar_cadena_alfabeto(alfa_str: str) -> List[str]:
+    """
+    Sanitiza la entrada del alfabeto tolerando notación de conjuntos {a, b},
+    comillas simples 'a', 'b', comillas dobles "a", "b", espacios y comas.
+    """
+    limpio = alfa_str.strip().strip("{}[]()")
+    if "," in limpio:
+        partes = limpio.split(",")
+    else:
+        partes = limpio.split()
+
+    simbolos = []
+    for p in partes:
+        s = p.strip().strip("'\"")
+        if s:
+            simbolos.append(s)
+    return simbolos
+
 def tracer_a_dict(tracer: PedagogicalTracer) -> Dict[str, Any]:
     return {
         "titulo": tracer.titulo_proceso,
@@ -74,7 +92,7 @@ def tracer_a_dict(tracer: PedagogicalTracer) -> Dict[str, Any]:
     }
 
 def procesar_modalidad_a_py(alfa_str: str, regex_str: str) -> Dict[str, Any]:
-    simbolos = [s.strip() for s in alfa_str.split(",") if s.strip()]
+    simbolos = limpiar_cadena_alfabeto(alfa_str)
     alfabeto = Alfabeto(simbolos)
 
     # 1. Thompson (Regex -> ε-AFND)
@@ -108,13 +126,13 @@ def procesar_modalidad_a_py(alfa_str: str, regex_str: str) -> Dict[str, Any]:
 
 def procesar_modalidad_b_py(alfa_str: str, estados_str: str, inicial_str: str,
                              finales_str: str, transiciones_list: List[Dict[str, str]]) -> Dict[str, Any]:
-    simbolos = [s.strip() for s in alfa_str.split(",") if s.strip()]
+    simbolos = limpiar_cadena_alfabeto(alfa_str)
     alfabeto = Alfabeto(simbolos)
     aut = Automata(alfabeto)
 
-    estados = [e.strip() for e in estados_str.split(",") if e.strip()]
-    inicial = inicial_str.strip()
-    finales = {f.strip() for f in finales_str.split(",") if f.strip()}
+    estados = [e.strip().strip("'\"") for e in estados_str.strip().strip("{}[]()").split(",") if e.strip()]
+    inicial = inicial_str.strip().strip("'\"")
+    finales = {f.strip().strip("'\"") for f in finales_str.strip().strip("{}[]()").split(",") if f.strip()}
 
     if inicial not in estados:
         raise ValueError(f"El estado inicial '{inicial}' no está en el conjunto de estados Q.")
