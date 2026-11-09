@@ -1,0 +1,17 @@
+# Dependencias
+node_modules/
+
+# Compilación de producción
+dist/
+dist-ssr/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Variables de entorno y SO
+.env
+.env.local
+.DS_Store
+*.log
