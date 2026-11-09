@@ -86,9 +86,18 @@ def limpiar_cadena_alfabeto(alfa_str: str) -> List[str]:
     return simbolos
 
 def tracer_a_dict(tracer: PedagogicalTracer) -> Dict[str, Any]:
+    regs = []
+    for r in tracer.registros:
+        cat = r.get("categoria", "INFO")
+        regs.append({
+            "tipo": cat,
+            "categoria": cat,
+            "mensaje": r.get("mensaje", ""),
+            "detalle": r.get("detalle", {})
+        })
     return {
         "titulo": tracer.titulo_proceso,
-        "registros": tracer.registros
+        "registros": regs
     }
 
 def procesar_modalidad_a_py(alfa_str: str, regex_str: str) -> Dict[str, Any]:

@@ -255,7 +255,10 @@ class AutomataGUI:
             self.notebook.select(self.tab_resultados)
             messagebox.showinfo("Éxito", "Modalidad A procesada exitosamente en Python.")
         except Exception as e:
-            messagebox.showerror("Error", str(e))
+            import traceback
+            traceback.print_exc()
+            msg = f"{type(e).__name__}: {e}" if str(e) else type(e).__name__
+            messagebox.showerror("Error de Procesamiento", msg)
 
     def procesar_modalidad_b(self):
         try:
@@ -278,7 +281,10 @@ class AutomataGUI:
             self.notebook.select(self.tab_resultados)
             messagebox.showinfo("Éxito", "Modalidad B procesada exitosamente en Python.")
         except Exception as e:
-            messagebox.showerror("Error", str(e))
+            import traceback
+            traceback.print_exc()
+            msg = f"{type(e).__name__}: {e}" if str(e) else type(e).__name__
+            messagebox.showerror("Error de Procesamiento", msg)
 
     def actualizar_vistas(self, res):
         # 1. Clasificación
@@ -301,9 +307,9 @@ class AutomataGUI:
 
         for row in tabla["filas"]:
             est = row["estado"]
-            marca = ("➔ " if est["esInicial"] else "") + ("★ " if est["esFinal"] else "")
+            marca = ("➔ " if est.get("esInicial") else "") + ("★ " if est.get("esFinal") else "")
             est_str = f"{marca}{est['id']}"
-            vals = [est_str] + [row["celdas"][c] for c in tabla["columnas"]]
+            vals = [est_str] + [row["celdas"].get(c, "—") for c in tabla["columnas"]]
             self.tree_tabla.insert("", tk.END, values=vals)
 
         # 3. Bitácora de Trazabilidad
@@ -312,8 +318,10 @@ class AutomataGUI:
             t = res.get(t_key)
             if t:
                 self.txt_traza.insert(tk.END, f"\n=== {t['titulo']} ===\n")
-                for r in t["registros"]:
-                    self.txt_traza.insert(tk.END, f"[{r['tipo']}] {r['mensaje']}\n")
+                for r in t.get("registros", []):
+                    cat = r.get("categoria") or r.get("tipo", "INFO")
+                    msg = r.get("mensaje", "")
+                    self.txt_traza.insert(tk.END, f"[{cat}] {msg}\n")
 
     def ejecutar_simulacion(self):
         if not self.resultado_actual:
