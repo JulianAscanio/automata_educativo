@@ -146,6 +146,10 @@ def procesar_modalidad_b_py(alfa_str: str, estados_str: str, inicial_str: str,
     if inicial not in estados:
         raise ValueError(f"El estado inicial '{inicial}' no está en el conjunto de estados Q.")
 
+    desconocidos = finales - set(estados)
+    if desconocidos:
+        raise ValueError(f"Los estados finales {sorted(desconocidos)} no están en el conjunto de estados Q.")
+
     for e in estados:
         aut.agregar_estado(e, es_inicial=(e == inicial), es_final=(e in finales))
 

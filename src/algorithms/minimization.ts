@@ -20,6 +20,23 @@ export class DFAMinimizer {
       }
     }
 
+    if (afd.tieneEpsilon() || afd.obtenerTodasLasTransiciones().some(
+      (t) => afd.obtenerTransiciones(t.origen, t.simbolo).size > 1
+    )) throw new Error("RF-09: Debe determinizar el autómata antes de minimizarlo.");
+
+    // Completar sobre la copia para comparar correctamente el rechazo implícito.
+    const faltantes = Array.from(automataLimpio.estados.keys()).flatMap((q) =>
+      automataLimpio.alfabeto.simbolos.filter((s) =>
+        automataLimpio.obtenerTransiciones(q, s).size === 0).map((s) => ({ q, s })));
+    if (faltantes.length) {
+      let pozo = "pozo";
+      while (automataLimpio.estados.has(pozo)) pozo += "_";
+      automataLimpio.agregarEstado(pozo);
+      for (const s of automataLimpio.alfabeto.simbolos) automataLimpio.agregarTransicion(pozo, s, pozo);
+      for (const { q, s } of faltantes) automataLimpio.agregarTransicion(q, s, pozo);
+      tracer.logInfo(`Se completan ${faltantes.length} transiciones indefinidas hacia '${pozo}', estado de rechazo, antes de refinar las particiones.`);
+    }
+
     // 2. Partición inicial P0 = {No-Finales, Finales}
     tracer.logEtapa("Etapa 2: Partición Inicial P0 (Finales vs No Finales)");
     const todos = Array.from(automataLimpio.estados.keys());

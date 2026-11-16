@@ -1,0 +1,17 @@
+Comando: npm run build
+Fecha UTC: 2026-11-16T00:38:22.679734+00:00
+Código de salida: 0
+
+
+> automata-educativo@1.0.0 build
+> tsc && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 2092 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.84 kB │ gzip:  0.48 kB
+dist/assets/index-C4jj0TCw.css   19.75 kB │ gzip:  4.59 kB
+dist/assets/index-o_tmHtZJ.js   202.77 kB │ gzip: 62.08 kB
+✓ built in 3.32s

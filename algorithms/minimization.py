@@ -20,6 +20,24 @@ class DFAMinimizer:
         for r in tracer_limpieza.registros:
             tracer.log(r["mensaje"], categoria=r["categoria"])
 
+        if afd.tiene_transiciones_epsilon() or any(
+            len(destinos) > 1 for mapa in afd.transiciones.values() for destinos in mapa.values()
+        ):
+            raise ValueError("RF-09: Debe determinizar el autómata antes de minimizarlo.")
+        faltantes = [(q, s) for q in afd_limpio.estados
+                     for s in afd_limpio.alfabeto.simbolos
+                     if not afd_limpio.obtener_transiciones_desde(q, s)]
+        if faltantes:
+            pozo = "pozo"
+            while pozo in afd_limpio.estados:
+                pozo += "_"
+            afd_limpio.agregar_estado(pozo)
+            for simbolo in afd_limpio.alfabeto.simbolos:
+                afd_limpio.agregar_transicion(pozo, simbolo, pozo)
+            for origen, simbolo in faltantes:
+                afd_limpio.agregar_transicion(origen, simbolo, pozo)
+            tracer.log(f"Se completan {len(faltantes)} transiciones indefinidas hacia '{pozo}', estado de rechazo.")
+
         # 2. Partición Inicial P0 = {F, Q \ F}
         tracer.log_etapa("Etapa 2: Partición Inicial P0 (Finales vs No-Finales)")
         finales = frozenset(afd_limpio.estados_finales)

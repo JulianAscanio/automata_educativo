@@ -92,11 +92,11 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ automata, estadoActivo
 
   return (
     <div
-      className="relative w-full h-[420px] bg-slate-950/80 rounded-xl border border-slate-800 overflow-hidden select-none"
+      className="relative w-full h-[460px] sm:h-[500px] bg-slate-950/80 rounded-xl border border-slate-800 overflow-hidden select-none"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
-      <div className="absolute top-3 left-4 z-10 flex items-center gap-3 text-xs text-slate-400">
+      <div className="absolute top-3 left-4 z-10 flex items-center gap-3 flex-wrap right-4 text-xs text-slate-400">
         <span className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full border-2 border-indigo-400 inline-block"></span> Estado normal
         </span>
@@ -170,7 +170,7 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ automata, estadoActivo
                   y={loopY - 32}
                   textAnchor="middle"
                   fill="#c7d2fe"
-                  fontSize="11"
+                  fontSize="13"
                   fontWeight="bold"
                 >
                   {label}
@@ -238,7 +238,7 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ automata, estadoActivo
                 y={labelY + 3}
                 textAnchor="middle"
                 fill="#c7d2fe"
-                fontSize="11"
+                fontSize="13"
                 fontWeight="bold"
               >
                 {label}

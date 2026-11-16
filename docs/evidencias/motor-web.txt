@@ -1,0 +1,10 @@
+Comando: npm test
+Fecha UTC: 2026-11-16T00:38:15.434043+00:00
+Código de salida: 0
+
+
+> automata-educativo@1.0.0 test
+> node tests/web-engine.mjs
+
+AFND generados: 100; comparaciones contra exploración independiente: 12600.
+Motor web: validaciones, poda, AFD parcial y 3570 comparaciones de cadenas aprobadas.

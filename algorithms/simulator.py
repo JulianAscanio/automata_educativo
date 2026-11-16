@@ -6,6 +6,8 @@ registrando cada transición para su visualización educativa.
 
 from typing import Dict, Any, List, Tuple
 from core.models import Automata
+from core.models import TipoAutomata
+from algorithms.classifier import AutomataClassifier
 
 class StringSimulator:
     @staticmethod
@@ -17,6 +19,8 @@ class StringSimulator:
           - pasos (List[Dict]): Lista de registros del recorrido paso a paso.
           - mensaje_final (str): Veredicto formal.
         """
+        if AutomataClassifier.clasificar(afd)[0] != TipoAutomata.AFD:
+            raise ValueError("Selecciona el AFD determinizado o mínimo para simular; el autómata actual es no determinista.")
         pasos = []
 
         if afd.estado_inicial is None:

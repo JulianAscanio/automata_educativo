@@ -1,0 +1,47 @@
+[
+  {
+    "caso": "Modalidad A: (a|b)*ab mínimo de tres estados",
+    "esperado": "3 estados",
+    "resultado": "APROBADO"
+  },
+  {
+    "caso": "Simulación aab",
+    "esperado": "Cadena aceptada",
+    "resultado": "APROBADO"
+  },
+  {
+    "caso": "Simulación aba",
+    "esperado": "Cadena rechazada",
+    "resultado": "APROBADO"
+  },
+  {
+    "caso": "Alfabeto duplicado",
+    "esperado": "duplicados",
+    "resultado": "APROBADO"
+  },
+  {
+    "caso": "AFND con ε: mínimo completo",
+    "esperado": "3 estados",
+    "resultado": "APROBADO"
+  },
+  {
+    "caso": "Simulación de AFND bloqueada",
+    "esperado": "Este autómata es no determinista",
+    "resultado": "APROBADO"
+  },
+  {
+    "caso": "AFD redundante: mínimo",
+    "esperado": "4 estados",
+    "resultado": "APROBADO"
+  },
+  {
+    "caso": "Poda de inaccesibles",
+    "esperado": "q_inacc",
+    "resultado": "APROBADO"
+  },
+  {
+    "caso": "Final ajeno a Q",
+    "esperado": "Los estados finales [Z]",
+    "resultado": "APROBADO"
+  }
+]

@@ -69,11 +69,11 @@ export class SubsetConstruction {
     // Mapeo conjunto ordenado en string -> nombre del macro estado
     const claveAEstado = new Map<string, string>();
     const cola: Set<string>[] = [conjuntoInicial];
-    claveAEstado.set(Array.from(conjuntoInicial).sort().join(","), nombreInicial);
+    claveAEstado.set(JSON.stringify(Array.from(conjuntoInicial).sort()), nombreInicial);
 
     while (cola.length > 0) {
       const actual = cola.shift()!;
-      const actualNombre = claveAEstado.get(Array.from(actual).sort().join(","))!;
+      const actualNombre = claveAEstado.get(JSON.stringify(Array.from(actual).sort()))!;
 
       for (const simbolo of afnd.alfabeto.simbolos) {
         // Moverse con el símbolo
@@ -91,12 +91,15 @@ export class SubsetConstruction {
 
         // Calcular la clausura épsilon de los destinos
         const clausuraDestinos = epsilonClosure(afnd, destinos);
-        const claveDest = Array.from(clausuraDestinos).sort().join(",");
+        const claveDest = JSON.stringify(Array.from(clausuraDestinos).sort());
 
         let nombreDestino = claveAEstado.get(claveDest);
 
         if (!nombreDestino) {
           nombreDestino = this.formatearMacroEstado(clausuraDestinos);
+          const base = nombreDestino;
+          let sufijo = 1;
+          while (afd.estados.has(nombreDestino)) nombreDestino = `${base}__${sufijo++}`;
           claveAEstado.set(claveDest, nombreDestino);
 
           const esFinal = Array.from(clausuraDestinos).some((q) => afnd.estadosFinales.has(q));

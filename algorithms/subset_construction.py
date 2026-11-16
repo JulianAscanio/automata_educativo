@@ -87,6 +87,11 @@ class SubsetConstruction:
 
                 if macro_destino not in mapeo_subconjuntos:
                     nombre_destino = self.formatear_nombre_macro_estado(macro_destino)
+                    base = nombre_destino
+                    sufijo = 1
+                    while nombre_destino in afd.estados:
+                        nombre_destino = f"{base}__{sufijo}"
+                        sufijo += 1
                     es_destino_final = any(q in self.afnd.estados_finales for q in macro_destino)
 
                     afd.agregar_estado(

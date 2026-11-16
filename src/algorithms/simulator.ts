@@ -1,8 +1,12 @@
 import { Automata } from "../core/Automata";
+import { AutomataClassifier } from "./classifier";
 import { ResultadoSimulacion, SimulacionPaso } from "../core/types";
 
 export class StringSimulator {
   static simular(afd: Automata, cadena: string): ResultadoSimulacion {
+    if (!AutomataClassifier.clasificar(afd).esDeterminista) {
+      throw new Error("Selecciona la etapa Determinizado o AFD Mínimo para simular cadenas. El autómata actual es no determinista.");
+    }
     const pasos: SimulacionPaso[] = [];
 
     if (!afd.estadoInicial) {

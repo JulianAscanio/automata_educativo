@@ -56,3 +56,23 @@ npm run build
    - Grafo interactivo en SVG con auto-posicionamiento y arrastre de nodos.
 9. **RF-12 (Simulador Interactivo):** Simulación paso a paso del consumo de cinta con resaltado en vivo de estados y veredicto formal de aceptación o rechazo.
 10. **RF-10 & RF-13 (Bitácora Educativa):** Trazabilidad completa paso a paso de cada transformación.
+
+## Pruebas y validación
+
+```bash
+npm test
+python3 test_runner.py
+python3 -m unittest discover -s tests -v
+```
+
+La sintaxis de expresiones regulares admite unión `|`, estrella `*`, paréntesis y concatenación implícita (`ab`) o explícita (`a.b`). Los alias de unión `+` y `U` se interpretan como operadores cuando no pertenecen al alfabeto; `∪` también representa unión.
+
+La minimización usa refinamiento iterativo de Moore y completa las transiciones faltantes mediante un estado de rechazo antes de comparar las particiones.
+
+La matriz de pruebas, resultados y límites de la revisión están en [docs/VALIDACION.md](docs/VALIDACION.md).
+
+El [documento técnico](docs/DOCUMENTO_TECNICO.md) describe estructuras, algoritmos, decisiones y bibliotecas. El [manual con ejemplos](docs/EJERCICIOS_MANUALES.md) cubre ambas modalidades. La simulación se realiza sobre AFD; al consultar un AFND, selecciona Determinizado o AFD Mínimo para probar cadenas.
+
+## Documentación de entrega
+
+Informe completo con capturas reales, manual, diseño técnico y resultados: [PDF](docs/ENTREGA_AUTOLEARN.pdf) y [fuente editable Markdown](docs/ENTREGA_AUTOLEARN.md). Los datos de portada quedan disponibles para completar. Las evidencias originales están en `docs/evidencias/`. El HTML autocontenido se puede regenerar con `python3 docs/generar_entrega.py` (requiere el paquete Python `Markdown`).

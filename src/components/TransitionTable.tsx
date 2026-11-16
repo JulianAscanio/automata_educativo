@@ -10,16 +10,16 @@ export const TransitionTable: React.FC<TransitionTableProps> = ({ automata, esta
   const { columnas, filas } = automata.obtenerTablaTransicion();
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60 shadow-md custom-scrollbar">
+    <div className="overflow-x-auto custom-scrollbar">
       <table className="w-full text-left text-sm text-slate-300">
-        <thead className="bg-slate-800/90 text-xs uppercase text-slate-400 border-b border-slate-700">
+        <thead className="bg-slate-950/60 text-xs text-slate-400 border-b border-slate-800">
           <tr>
-            <th scope="col" className="px-4 py-3 font-semibold tracking-wider">
-              Estado (Q)
+            <th scope="col" className="px-4 py-2.5 font-medium">
+              Estado
             </th>
             {columnas.map((col) => (
-              <th key={col} scope="col" className="px-4 py-3 font-semibold text-center tracking-wider text-indigo-300">
-                δ ( _ , '{col}')
+              <th key={col} scope="col" className="px-4 py-2.5 font-medium text-center text-indigo-300 font-mono">
+                {col}
               </th>
             ))}
           </tr>
@@ -53,7 +53,7 @@ export const TransitionTable: React.FC<TransitionTableProps> = ({ automata, esta
                     {estado.id}
                   </span>
                   {estado.subEstados && estado.subEstados.length > 0 && (
-                    <span className="text-[11px] text-slate-500 font-mono">
+                    <span className="text-xs text-slate-500 font-mono">
                       {"{" + estado.subEstados.join(", ") + "}"}
                     </span>
                   )}

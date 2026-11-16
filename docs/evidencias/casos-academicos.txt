@@ -1,0 +1,25 @@
+Comando: python3 test_runner.py
+Fecha UTC: 2026-11-16T00:38:22.753882+00:00
+Código de salida: 0
+
+
+==================== TEST CASO 1: Modalidad A (Regex) ====================
+[OK] Thompson generado con 12 estados.
+[OK] AFD Determinizado con 4 estados.
+[OK] AFD Mínimo con 3 estados. Estados finales: {'M_q_s0_s11_s2_s3_s4_s5_s7_s8'}
+[OK] Simulación RF-12 validada: 'aab' aceptada, 'aba' rechazada.
+CASO 1 APROBADO CON ÉXITO.
+
+==================== TEST CASO 2: Modalidad B (AFND con ε) ====================
+[OK] Tipo detectado: Autómata Finito No Determinista con Transiciones Épsilon (ε-AFND)
+[OK] AFD Determinizado con 2 estados.
+[OK] AFD Mínimo con 3 estados.
+[OK] Simulación RF-12 validada: '0010' aceptada, '11' rechazada.
+CASO 2 APROBADO CON ÉXITO.
+
+==================== TEST CASO 3: Modalidad B (AFD Redundante) ====================
+[OK] Tipo detectado: Autómata Finito Determinista (AFD)
+[OK] AFD Mínimo con 4 estados (C y D fusionados).
+CASO 3 APROBADO CON ÉXITO.
+
+>>> TODOS LOS CASOS DE PRUEBA ACADÉMICOS EN PYTHON HAN SIDO VALIDADOS EXITOSAMENTE <<<

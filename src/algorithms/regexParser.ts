@@ -27,16 +27,37 @@ export class RegexParser {
     }
     limpia = limpia.split("∪").join("|");
 
-    const operadoresValidos = new Set(["|", "*", "(", ")"]);
+    const operadoresValidos = new Set(["|", ".", "*", "(", ")"]);
 
     // Validar símbolos (RF-02)
     for (const char of limpia) {
       if (!this.alfabeto.pertenece(char) && !operadoresValidos.has(char)) {
         throw new Error(
-          `RF-02 Violado: El símbolo '${char}' en la expresión regular no pertenece al alfabeto [${this.alfabeto.simbolos.join(", ")}] ni es un operador permitido (| * ( )).`
+          `RF-02 Violado: El símbolo '${char}' en la expresión regular no pertenece al alfabeto [${this.alfabeto.simbolos.join(", ")}] ni es un operador permitido (| . * ( )).`
         );
       }
     }
+
+    let esperaOperando = true;
+    let profundidad = 0;
+    for (const token of limpia) {
+      if (token === "(") {
+        profundidad++;
+        esperaOperando = true;
+      } else if (token === ")") {
+        if (esperaOperando || profundidad === 0) throw new Error("RF-02: Paréntesis vacío o desbalanceado.");
+        profundidad--;
+        esperaOperando = false;
+      } else if (token === "*") {
+        if (esperaOperando) throw new Error("RF-02: La cerradura * necesita un operando previo.");
+      } else if (token === "|" || token === ".") {
+        if (esperaOperando) throw new Error(`RF-02: Falta un operando antes de '${token}'.`);
+        esperaOperando = true;
+      } else {
+        esperaOperando = false;
+      }
+    }
+    if (esperaOperando || profundidad !== 0) throw new Error("RF-02: Expresión incompleta o paréntesis desbalanceados.");
 
     // Inserción de concatenación explícita '.'
     const res: string[] = [];

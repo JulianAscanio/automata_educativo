@@ -2,6 +2,13 @@ import { Alphabet } from "./Alphabet";
 import { Estado, Transicion, EPSILON } from "./types";
 
 export class Automata {
+  static validarEstadosFinales(estados: string[], finales: Set<string>): void {
+    const desconocidos = [...finales].filter((estado) => !estados.includes(estado));
+    if (desconocidos.length) {
+      throw new Error(`Los estados finales [${desconocidos.join(", ")}] no están en la lista de estados Q.`);
+    }
+  }
+
   public alfabeto: Alphabet;
   public estados: Map<string, Estado>;
   public estadoInicial: Estado | null = null;

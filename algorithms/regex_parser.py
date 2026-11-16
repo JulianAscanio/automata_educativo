@@ -9,7 +9,7 @@ from core.models import Alfabeto
 from core.exceptions import RegexSyntaxError
 
 class RegexParser:
-    OPERADORES = {'|', '*', '(', ')'}
+    OPERADORES = {'|', '.', '*', '(', ')'}
     PRECEDENCIA = {'*': 3, '.': 2, '|': 1}
 
     def __init__(self, alfabeto: Alfabeto):
@@ -21,7 +21,7 @@ class RegexParser:
         e inserta explícitamente el operador de concatenación ('.').
         """
         regex = regex.strip().strip("'\"")
-        regex = regex.replace(" ", "")
+        regex = "".join(regex.split())
         if not regex:
             raise RegexSyntaxError("La expresión regular no puede estar vacía.")
 
@@ -39,6 +39,29 @@ class RegexParser:
                 raise RegexSyntaxError(
                     f"RF-02 Violado: Símbolo '{c}' en la expresión regular no pertenece al alfabeto {simbolos_disp} ni es un operador permitido (| * ( ))."
                 )
+
+        espera_operando = True
+        profundidad = 0
+        for token in regex:
+            if token == '(':
+                profundidad += 1
+                espera_operando = True
+            elif token == ')':
+                if espera_operando or profundidad == 0:
+                    raise RegexSyntaxError("Paréntesis vacío o desbalanceado.")
+                profundidad -= 1
+                espera_operando = False
+            elif token == '*':
+                if espera_operando:
+                    raise RegexSyntaxError("La cerradura * necesita un operando previo.")
+            elif token in {'|', '.'}:
+                if espera_operando:
+                    raise RegexSyntaxError(f"Falta un operando antes de '{token}'.")
+                espera_operando = True
+            else:
+                espera_operando = False
+        if espera_operando or profundidad:
+            raise RegexSyntaxError("Expresión incompleta o paréntesis desbalanceados.")
 
         # Inserción de concatenación explícita
         con_concatenacion: List[str] = []

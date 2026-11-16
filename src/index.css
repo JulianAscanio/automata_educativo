@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-size: 18px;
+  }
+
   body {
     @apply bg-slate-900 text-slate-100 font-sans antialiased;
   }
