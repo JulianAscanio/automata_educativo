@@ -4,7 +4,7 @@ Software interactivo para la enseñanza formal de Teoría de la Computación, au
 
 ---
 
-## 🚀 Despliegue en Netlify
+## Despliegue en Netlify
 
 El proyecto cuenta con configuración lista para producción mediante `netlify.toml`:
 
@@ -42,7 +42,7 @@ npm run build
 
 ---
 
-## 🧠 Algoritmos Implementados
+## Algoritmos Implementados
 
 1. **RF-01 (Alfabeto):** Validación de unicidad de símbolos, proscripción del metasímbolo `ε`.
 2. **RF-02 (Expresiones Regulares):** Parser Shunting-Yard con concatenación explícita `.` y precedencia `*` > `.` > `|`.
