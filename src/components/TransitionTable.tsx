@@ -36,7 +36,8 @@ export const TransitionTable: React.FC<TransitionTableProps> = ({ automata, esta
                     : "hover:bg-slate-800/40"
                 }`}
               >
-                <td className="px-4 py-3 flex items-center gap-2">
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
                   <span className="text-xs font-mono w-6 text-slate-400">
                     {estado.esInicial && "➔ "}
                     {estado.esFinal && "★ "}
@@ -52,10 +53,16 @@ export const TransitionTable: React.FC<TransitionTableProps> = ({ automata, esta
                   >
                     {estado.id}
                   </span>
+                  </div>
                   {estado.subEstados && estado.subEstados.length > 0 && (
-                    <span className="text-xs text-slate-500 font-mono">
-                      {"{" + estado.subEstados.join(", ") + "}"}
-                    </span>
+                    <details className="mt-1 max-w-xs text-xs text-slate-400">
+                      <summary className="cursor-pointer hover:text-slate-200">
+                        Ver composición
+                      </summary>
+                      <p className="mt-1 font-mono break-all">
+                        {"{" + estado.subEstados.join(", ") + "}"}
+                      </p>
+                    </details>
                   )}
                 </td>
                 {columnas.map((col) => (

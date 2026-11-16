@@ -109,8 +109,8 @@ class DFAMinimizer:
         afd_min = Automata(afd_limpio.alfabeto)
         mapeo_nuevo_id: Dict[str, str] = {}
 
-        for grupo in particiones:
-            id_minimo = "M_" + "_".join(sorted(list(grupo)))
+        for idx, grupo in enumerate(particiones):
+            id_minimo = f"M{idx}"
             es_ini = any(afd_limpio.estados[q].es_inicial for q in grupo)
             es_fin = any(q in afd_limpio.estados_finales for q in grupo)
 

@@ -44,7 +44,13 @@ try {
       assert.throws(() => DFAMinimizer.minimizar(nfa));
     }
     const dfa = SubsetConstruction.determinizar(nfa).afd;
-    const minimal = DFAMinimizer.minimizar(dfa).afdMinimo;
+    const { afdMinimo: minimal, tracer } = DFAMinimizer.minimizar(dfa);
+    for (const state of minimal.estados.values()) {
+      assert.match(state.id, /^M\d+$/);
+      assert.ok(state.subEstados.length > 0);
+      const mapping = tracer.registros.find(r => r.tipo === 'MAPEO' && r.detalle.nuevoId === state.id);
+      assert.deepEqual(mapping.detalle.original, [...state.subEstados].sort());
+    }
     if (['(a|b)*ab', '(a|b)*.a.b'].includes(expression)) assert.equal(minimal.estados.size, 3);
     const oracle = new RegExp(`^(?:${expression.replaceAll('.', '')})$`);
     for (let length = 0; length <= 7; length++) {

@@ -3,6 +3,8 @@
 
 **Informe técnico, manual de usuario y evidencias de validación**
 
+**Aplicación en línea:** [https://automataeducativo.netlify.app/](https://automataeducativo.netlify.app/). La versión publicada se utiliza desde el navegador sin instalar dependencias. Las evidencias incluidas más adelante corresponden a las pruebas locales documentadas.
+
 | Dato | Información |
 | --- | --- |
 | Integrantes | [Completar] |

@@ -258,6 +258,11 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ automata, estadoActivo
               className="cursor-grab active:cursor-grabbing"
               onMouseDown={(e) => handleMouseDown(est.id, e)}
             >
+              <title>
+                {est.subEstados?.length
+                  ? `${est.id}: {${est.subEstados.join(", ")}}`
+                  : est.id}
+              </title>
               {/* Flecha indicadora de estado inicial */}
               {est.esInicial && (
                 <g>

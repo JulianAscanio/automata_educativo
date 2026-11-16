@@ -16,6 +16,8 @@ En modalidad B se ingresan Q y F como listas separadas por comas, un único esta
 
 `Alphabet` encapsula los símbolos y sus validaciones. `PedagogicalTracer` registra etapas, mensajes, correspondencias y particiones. Los resultados de simulación incluyen aceptación, pasos y mensaje final. En Python se utilizan diccionarios y conjuntos con el mismo propósito.
 
+Los estados mínimos se nombran `M0`, `M1`, `M2`, etc. Su correspondencia con los estados anteriores se conserva en `subEstados` (`sub_estados` en Python) y en la bitácora. La tabla permite abrir **Ver composición** y el grafo muestra la composición al situar el puntero sobre el estado. Las capturas originales del informe corresponden a la versión anterior, que incluía la composición en el identificador.
+
 ## Algoritmos implementados
 
 1. **Análisis de expresiones:** el parser valida los símbolos y la estructura, introduce concatenaciones y convierte a notación posfija con una pila de operadores.

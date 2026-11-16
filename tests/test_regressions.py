@@ -8,6 +8,18 @@ from bridge import procesar_modalidad_b_py
 
 
 class RegressionTests(unittest.TestCase):
+    def test_short_names_preserve_composition(self):
+        automaton = Automata(Alfabeto(['a']))
+        automaton.agregar_estado('estado_inicial_largo', es_inicial=True, es_final=True)
+        automaton.agregar_estado('estado_equivalente_largo', es_final=True)
+        automaton.agregar_transicion('estado_inicial_largo', 'a', 'estado_equivalente_largo')
+        automaton.agregar_transicion('estado_equivalente_largo', 'a', 'estado_equivalente_largo')
+        minimal, tracer = DFAMinimizer.minimizar(automaton)
+        self.assertEqual(set(minimal.estados), {'M0'})
+        self.assertEqual(minimal.estados['M0'].sub_estados, frozenset(automaton.estados))
+        self.assertEqual(minimal.obtener_transiciones_desde('M0', 'a'), {'M0'})
+        self.assertTrue(any('estado_inicial_largo' in r['mensaje'] and 'M0' in r['mensaje'] for r in tracer.registros))
+
     def test_unknown_final_state(self):
         with self.assertRaisesRegex(ValueError, 'Z'):
             procesar_modalidad_b_py('a', 'A,B', 'A', 'Z', [])

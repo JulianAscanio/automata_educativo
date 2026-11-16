@@ -2,6 +2,8 @@
 
 Software interactivo para la enseñanza formal de Teoría de la Computación, autómatas finitos (AFD, AFND, ε-AFND) y expresiones regulares, diseñado para ser desplegado de forma estática en **Netlify**.
 
+**Aplicación en línea:** [automataeducativo.netlify.app](https://automataeducativo.netlify.app/). Se accede desde el navegador, sin instalar dependencias.
+
 ---
 
 ## Despliegue en Netlify

@@ -117,7 +117,7 @@ export class DFAMinimizer {
     const nombresMacro: string[] = [];
 
     particiones.forEach((grupo, idx) => {
-      const nombre = `M${idx}_${grupo.sort().join("_")}`;
+      const nombre = `M${idx}`;
       nombresMacro.push(nombre);
 
       const esInicial = grupo.includes(automataLimpio.estadoInicial!.id);
