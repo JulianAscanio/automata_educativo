@@ -79,7 +79,7 @@ class AutomataHTTPHandler(SimpleHTTPRequestHandler):
 def run_server():
     server_address = ("", PORT)
     httpd = HTTPServer(server_address, AutomataHTTPHandler)
-    url = f"http://localhost:{PORT}/index.html"
+    url = f"https://automataeducativo.netlify.app/"
 
     print("=" * 65)
     print(" AutoLearn • Servidor Web Educativo en Python Puro")
