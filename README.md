@@ -44,6 +44,13 @@ npm run build
 
 ---
 
+## Resolver un enunciado en la aplicación web
+
+- **Expresión Regular.** Escribe, por ejemplo, «Cadenas sobre {a, b} que terminan en ab» o «Cadenas binarias que tienen una cantidad par de 1». La aplicación obtiene el alfabeto y la expresión regular, explica cómo la construyó y muestra el AFND inicial, el AFD determinizado y el AFD mínimo.
+- **Autómata Manual.** Escribe, por ejemplo, «Autómata con estado inicial A y estado final B. Desde A con 0 va a A. Desde A con 1 va a B». El sistema extrae los estados y transiciones, infiere el alfabeto a partir de las etiquetas y clasifica el autómata. Si hay símbolos sin transiciones, indica el alfabeto dentro del enunciado con «Autómata con alfabeto {0, 1} y estado inicial A y estado final B». Para declarar estados aislados adicionales o editar componentes directamente, abre **Ingresar componentes manualmente**.
+
+El reconocimiento se ejecuta en el navegador y admite frases guiadas en español. En Expresión Regular puedes describir inicio, final, inicio y final juntos, subcadena, penúltimo símbolo, longitud fija o par/impar y cantidad par/impar de un símbolo. Para un alfabeto de símbolos distintos de 0 y 1, declara sus símbolos dentro de la frase. En Autómata Manual, escribe una oración por transición. Puedes usar «epsilon» y listar varios destinos con «y».
+
 ## Algoritmos Implementados
 
 1. **RF-01 (Alfabeto):** Validación de unicidad de símbolos, proscripción del metasímbolo `ε`.

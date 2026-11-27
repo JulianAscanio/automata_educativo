@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Alphabet } from "./core/Alphabet";
 import { Automata } from "./core/Automata";
 import { PedagogicalTracer } from "./core/Tracer";
@@ -6,6 +6,9 @@ import { ThompsonAlgorithm } from "./algorithms/thompson";
 import { AutomataClassifier, ClasificacionResultado } from "./algorithms/classifier";
 import { SubsetConstruction } from "./algorithms/subsetConstruction";
 import { DFAMinimizer } from "./algorithms/minimization";
+import { resolverEnunciado, SolucionEnunciado } from "./algorithms/languageProblem";
+import { interpretarAutomata, DatosAutomata } from "./algorithms/automataProblem";
+import { InputEnunciadoAutomata } from "./components/InputEnunciadoAutomata";
 import { InputModalidadA } from "./components/InputModalidadA";
 import { InputModalidadB } from "./components/InputModalidadB";
 import { ClassificationCard } from "./components/ClassificationCard";
@@ -41,45 +44,53 @@ export function App() {
   const [estadoActivo, setEstadoActivo] = useState<string | undefined>(undefined);
   const [errorGlobal, setErrorGlobal] = useState<string | null>(null);
 
-  // Procesamiento para Expresión Regular
-  const procesarModalidadA = (alfaStr: string, regexStr: string) => {
-    setErrorGlobal(null);
-    try {
-      const simbolos = Alphabet.parsearCadena(alfaStr);
-      const alfabeto = new Alphabet(simbolos);
+  const [solucion, setSolucion] = useState<SolucionEnunciado | null>(null);
+  const [automataInterpretado, setAutomataInterpretado] = useState<DatosAutomata | null>(null);
 
-      const { automata: nfa, tracer: tThompson } = new ThompsonAlgorithm(alfabeto).construir(regexStr);
+  const limpiarResultados = () => {
+    setAutomataInicial(null);
+    setClasificacionInicial(null);
+    setAutomataDFA(null);
+    setAutomataMinimo(null);
+    setTracerThompson(null);
+    setTracerSubconjuntos(null);
+    setTracerMinimizacion(null);
+    setEstadoActivo(undefined);
+    setMostrarDiagnostico(false);
+    setPanelTab("tabla");
+    setErrorGlobal(null);
+    setSolucion(null);
+    setAutomataInterpretado(null);
+  };
+
+  const procesarModalidadA = (enunciado: string) => {
+    limpiarResultados();
+    try {
+      const resultado = resolverEnunciado(enunciado);
+      const { automata: nfa, tracer: tThompson } = new ThompsonAlgorithm(resultado.alfabeto).construir(resultado.expresion);
+      const clasif = AutomataClassifier.clasificar(nfa);
+      const { afd, tracer: tSub } = SubsetConstruction.determinizar(nfa);
+      const { afdMinimo, tracer: tMin } = DFAMinimizer.minimizar(afd);
+
+      setSolucion(resultado);
       setAutomataInicial(nfa);
       setTracerThompson(tThompson);
-
-      const clasif = AutomataClassifier.clasificar(nfa);
       setClasificacionInicial(clasif);
-
-      const { afd, tracer: tSub } = SubsetConstruction.determinizar(nfa);
       setAutomataDFA(afd);
       setTracerSubconjuntos(tSub);
-
-      const { afdMinimo, tracer: tMin } = DFAMinimizer.minimizar(afd);
       setAutomataMinimo(afdMinimo);
       setTracerMinimizacion(tMin);
-
       setEtapaVisual("minimo");
-      setTraceActiva("minimizacion");
-    } catch (err: any) {
-      setErrorGlobal(err.message || String(err));
+      setTraceActiva("thompson");
+    } catch (err) {
+      setErrorGlobal(err instanceof Error ? err.message : String(err));
     }
   };
 
-  // Procesamiento para Autómata Manual
-  const procesarModalidadB = (datos: {
-    alfabetoStr: string;
-    estadosStr: string;
-    inicialStr: string;
-    finalesStr: string;
-    transiciones: Array<{ origen: string; simbolo: string; destino: string }>;
-  }) => {
-    setErrorGlobal(null);
+  const procesarModalidadB = (entrada: DatosAutomata | string) => {
+    limpiarResultados();
     try {
+      const datos = typeof entrada === "string" ? interpretarAutomata(entrada) : entrada;
       const simbolos = Alphabet.parsearCadena(datos.alfabetoStr);
       const alfabeto = new Alphabet(simbolos);
       const aut = new Automata(alfabeto);
@@ -137,16 +148,14 @@ export function App() {
       setAutomataMinimo(afdMinimo);
       setTracerMinimizacion(tMin);
 
+      if (typeof entrada === "string") setAutomataInterpretado(datos);
       setEtapaVisual("minimo");
-      setTraceActiva("minimizacion");
+      setTraceActiva(clasif.esDeterminista ? "minimizacion" : "subconjuntos");
     } catch (err: any) {
       setErrorGlobal(err.message || String(err));
     }
   };
 
-  useEffect(() => {
-    procesarModalidadA("a, b", "(a|b)*ab");
-  }, []);
 
   const autVisualActivo =
     etapaVisual === "minimo"
@@ -183,24 +192,34 @@ export function App() {
 
           <div className="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800 self-start sm:self-auto">
             <button
-              onClick={() => setModalidad("A")}
+              onClick={() => {
+                if (modalidad !== "A") {
+                  limpiarResultados();
+                  setModalidad("A");
+                }
+              }}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 modalidad === "A"
                   ? "bg-indigo-600 text-white"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
-              Expresión Regular
+              Problema de Lenguaje
             </button>
             <button
-              onClick={() => setModalidad("B")}
+              onClick={() => {
+                if (modalidad !== "B") {
+                  limpiarResultados();
+                  setModalidad("B");
+                }
+              }}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 modalidad === "B"
                   ? "bg-indigo-600 text-white"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
-              Autómata Manual
+              Desde Autómata
             </button>
           </div>
         </div>
@@ -211,16 +230,62 @@ export function App() {
         {/* Entrada */}
         <section>
           {modalidad === "A" ? (
-            <InputModalidadA onProcesar={procesarModalidadA} />
+            <InputModalidadA onProcesar={procesarModalidadA} onEditar={limpiarResultados} />
           ) : (
-            <InputModalidadB onProcesar={procesarModalidadB} />
+            <div className="space-y-3">
+              <InputEnunciadoAutomata onProcesar={procesarModalidadB} onEditar={limpiarResultados} />
+              <details>
+                <summary className="cursor-pointer text-sm text-slate-400 px-1 py-2">Ingresar componentes manualmente</summary>
+                <InputModalidadB onProcesar={procesarModalidadB} />
+              </details>
+            </div>
           )}
         </section>
 
         {errorGlobal && (
-          <div className="p-3.5 bg-rose-950/40 border border-rose-800/70 text-rose-300 rounded-xl text-xs font-mono">
+          <div role="alert" className="p-3.5 bg-rose-950/40 border border-rose-800/70 text-rose-300 rounded-xl text-xs font-mono">
             {errorGlobal}
           </div>
+        )}
+
+        {solucion && (
+          <section aria-label="Solución del enunciado" className="p-4 sm:p-5 rounded-2xl border border-slate-800 bg-slate-900/60 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-sm font-semibold text-white">Cómo se deduce la solución paso a paso</h2>
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <span className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">
+                  Σ = <code>{'{'}{solucion.alfabeto.simbolos.join(", ")}{'}'}</code>
+                </span>
+                <span className="px-2.5 py-1 rounded-lg bg-indigo-950/60 border border-indigo-500/30 text-indigo-300">
+                  Regex: <code className="break-all">{solucion.expresion}</code>
+                </span>
+              </div>
+            </div>
+
+            <ol className="space-y-2.5">
+              {solucion.pasos.map((paso, idx) => (
+                <li key={idx} className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+                  <p className="text-xs font-semibold text-indigo-300">{paso.titulo}</p>
+                  <p className="text-xs text-slate-300 leading-relaxed">{paso.detalle}</p>
+                  {paso.formula && (
+                    <p className="text-xs font-mono text-emerald-300 bg-slate-900/80 px-2.5 py-1.5 rounded-lg border border-slate-800/80 break-all">
+                      {paso.formula}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {automataInterpretado && automataInicial && (
+          <section aria-label="Autómata interpretado" className="p-4 rounded-2xl border border-slate-800 bg-slate-900/60 space-y-2">
+            <h2 className="text-sm font-semibold">Componentes extraídos del enunciado</h2>
+            <p className="text-sm text-slate-300">Alfabeto Σ = <code>{'{'}{automataInicial.alfabeto.simbolos.join(", ")}{'}'}</code></p>
+            <p className="text-sm text-slate-300">Estados Q = <code>{'{'}{automataInterpretado.estadosStr}{'}'}</code></p>
+            <p className="text-sm text-slate-300">Inicial <code>{automataInterpretado.inicialStr}</code> · Finales F = <code>{'{'}{automataInterpretado.finalesStr}{'}'}</code></p>
+            <p className="text-sm text-slate-300">{automataInicial.obtenerTodasLasTransiciones().length} transiciones · {clasificacionInicial?.tipo}</p>
+          </section>
         )}
 
         {/* Barra de etapas + clasificación compacta */}
